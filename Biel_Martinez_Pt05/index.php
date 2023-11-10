@@ -16,7 +16,6 @@ try {
     }
 
     //Calculs de les variables que controlen les pagines i els articles per pagina
-    $artPerPag = 40;
     if ($_SERVER["REQUEST_METHOD"]=="GET"){
         if(!isset($_GET["artPerPag"])){
             $artPerPag=40;
@@ -27,6 +26,9 @@ try {
             }
         }
     }
+    else{
+        $artPerPag = 40;
+    }
     $limit = intval($artPerPag);
     $offset = intval(($pagina - 1) * $artPerPag);
 
@@ -35,7 +37,7 @@ try {
     $recompte = $sentencia->fetchObject()->recompte;
     //Comprovació de si el recompte d'articles és buit per fer la redirecció
     if ($recompte == 0 || empty($recompte)) {
-        header("Location: ./Biel_Martinez_Pt04/");
+        header("Location: ./Biel_Martinez_Pt05/");
     }
     $paginaT = ceil($recompte / $artPerPag);
 
