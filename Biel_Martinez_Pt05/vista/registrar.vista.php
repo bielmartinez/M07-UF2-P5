@@ -8,6 +8,7 @@
 
 <header>
     <a href="../index.php">Tornar</a>
+    <a href="../controlador/login.php">Login</a>
 </header>
 
 <form action="../controlador/registrar.php" method="post">

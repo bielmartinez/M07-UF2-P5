@@ -8,6 +8,7 @@
 
 <header>
     <a href="../index.php">Tornar</a>
+    <a href="../controlador/registrar.php">Registrar</a>
 </header>
 
 <form action="../controlador/login.php" method="post">
@@ -15,3 +16,7 @@
     Contrasenya: <input type="password" name="contrasenya" value="<?php if (isset($contrasenya)) { echo $contrasenya; } ?>"> <?php echo isset($errors[1]) ? $errors[1] : ''; ?><br>
     <input type="submit">
 </form>
+
+<a href="../controlador/canviContrasenya.php">
+Has oblidat la teva contrasenya? 
+</a>
