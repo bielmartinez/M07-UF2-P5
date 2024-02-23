@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuari =  arreglarDades($_POST['usuari']);
     $contrasenya = arreglarDades($_POST['contrasenya']);
     $contrasenya2 = arreglarDades($_POST['contrasenya2']);
-    
+
     //Es comprova si els camps son buits i si les contrasenyas coincideixen
     if (empty($usuari)) {
         $errors[0] = "El camp usuari està buit";
@@ -44,10 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     //En cas que les comprovacions siguin correctes es busca si existeix l'usuari
     if ($correcte[0] && $correcte[1] && $correcte[2] && $correcte[3]) {
-        $comprovacio = $connexio->prepare("SELECT usuari FROM usuaris WHERE usuari = ? ");
-        $comprovacio->execute([$usuari]);
-        $usuariComprovacio = $comprovacio->fetchAll(PDO::FETCH_OBJ);
-        if ($usuariComprovacio){
+        $usuariComprovacio = comprovarUsuari($connexio, $usuari);
+        if ($usuariComprovacio) {
             echo "L'usuari introduït ja està registrat";
             //Si l'usuari introduit no és a la base de dades s'introdueix amb la contrasenya xifrada mitjançant password_hash
         } else {
