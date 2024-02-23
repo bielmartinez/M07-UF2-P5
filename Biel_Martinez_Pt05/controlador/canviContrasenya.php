@@ -50,7 +50,7 @@ function enviarCorreu($nomC, $correuC, $textC)
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'bielmailerphp@gmail.com';
-        $mail->Password   = 'akyy jrdp pmpv cfph ';
+        $mail->Password   = ;
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
