@@ -5,9 +5,9 @@ require 'controlador.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'PHPMailer/Exception.php';
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
+require '../PHPMailer/Exception.php';
+require '../PHPMailer/PHPMailer.php';
+require '../PHPMailer/SMTP.php';
 
 $connexio = conectarBD();
 
@@ -22,15 +22,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($correuComprovacio) {
             // Generació de token
             $token = bin2hex(openssl_random_pseudo_bytes(16));
-            $updateToken = $connexio->prepare("UPDATE `usuaris` SET `token` = ? WHERE `correu` = ?");
-            $updateToken->execute([$token, $correu]);
+            $insertToken = $connexio->prepare("INSERT INTO tokens (correu, token) VALUES (?, ?)");
+            $insertToken->execute([$correu, $token]);
 
-            // Aquí aniria el codi per enviar el correu quan prepari la funció
-
-
-            mail($to, $subject, $message, $headers);
-
-            echo "Correu enviat";
+            //Crida al mailer
+            enviarCorreu($correu, $updateToken);
         } else {
             echo "El correu introduït no existeix";
         }
@@ -38,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 //funcio del mailer
-function enviarCorreu($nomC, $correuC, $textC)
+function enviarCorreu($correuC, $tokenC)
 {
     //Create an instance; passing `true` enables exceptions
     $mail = new PHPMailer(true);
@@ -50,7 +46,7 @@ function enviarCorreu($nomC, $correuC, $textC)
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'bielmailerphp@gmail.com';
-        $mail->Password   = ;
+        $mail->Password   = 'akyy jrdp pmpv cfph ';
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
@@ -60,8 +56,8 @@ function enviarCorreu($nomC, $correuC, $textC)
 
         //Content
         $mail->isHTML(true);
-        $mail->Subject = 'Practica PHPMailer Biel Martínez';
-        $mail->Body    = 'Nom: ' . $nomC . '<br/> Text: ' . $textC;
+        $mail->Subject = 'Recuperació contrasenya';
+        $mail->Body    = 'Recuperar contrasenya: http://localhost:8080/M07-UF2-P5/Biel_Martinez_Pt05/controlador/canviContrasenya.php?token=$tokenC';
 
         $mail->send();
         echo 'Enviat correctament';
