@@ -22,11 +22,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($correuComprovacio) {
             // Generació de token
             $token = bin2hex(openssl_random_pseudo_bytes(16));
-            $insertToken = $connexio->prepare("INSERT INTO tokens (correu, token) VALUES (?, ?)");
-            $insertToken->execute([$correu, $token]);
+            $statement = $connexio->prepare("UPDATE usuaris SET token = ?, expire=NOW() + INTERVAL 1 HOUR WHERE usuari = ? ");
+            $statement->execute([$token, $correu]);
 
             //Crida al mailer
-            enviarCorreu($correu, $updateToken);
+            enviarCorreu($correu, $token);
         } else {
             echo "El correu introduït no existeix";
         }
@@ -57,7 +57,7 @@ function enviarCorreu($correuC, $tokenC)
         //Content
         $mail->isHTML(true);
         $mail->Subject = 'Recuperació contrasenya';
-        $mail->Body    = 'Recuperar contrasenya: http://localhost:8080/M07-UF2-P5/Biel_Martinez_Pt05/controlador/canviContrasenya.php?token=$tokenC';
+        $mail->Body    = 'Recuperar contrasenya: http://localhost:8080/M07-UF2-P5/Biel_Martinez_Pt05/controlador/canviContrasenyaToken.php?token='.$tokenC.'&correu='.$correuC;
 
         $mail->send();
         echo 'Enviat correctament';
