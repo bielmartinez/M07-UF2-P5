@@ -20,11 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["correu"])) {
     $tokenCorrecte = $statement1->fetchAll(PDO::FETCH_ASSOC);
 
     //Si el token és vàl·lid permet canviar de contrasenya, si no no
-    if ($tokenCorrecte[0]["COUNT(*)"] == 1) {
-        echo "Token valid";
-    } else {
+    if (!$tokenCorrecte[0]["COUNT(*)"] == 1) {
         die("Token incorrecte");
     }
+}
+else {
+    die("Token incorrecte");
 }
 require "../vista/canviContrasenyaToken.vista.php"
 ?>
