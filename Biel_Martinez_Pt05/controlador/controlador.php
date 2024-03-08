@@ -3,7 +3,7 @@
 //Funcio per conectar amb la BD mitjançant PDO
 function conectarBD()
 {
-    $connexio = new PDO('mysql:host=localhost;dbname=pt05_Biel_Martinez', 'root', '');
+    $connexio = new PDO('mysql:host=localhost;dbname=pt05_biel_martinez', 'root', '');
     return $connexio;
 }
 
