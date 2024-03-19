@@ -10,6 +10,11 @@ $correcte = array();
 $usuari;
 $contrasenya;
 $contrasenya2;
+$captcha = true;
+session_start();
+if (!isset($_SESSION['intents'])) {
+    $_SESSION['intents'] = 0;
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuari =  arreglarDades($_POST['usuari']);
@@ -29,7 +34,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($correcte[0] && $correcte[1]) {
-        //Una vegada es comprova que no està buit es busca a la base de dades si existeix o no l'usuari i si la contrasenya és correcte
+    if ($_SESSION['intents'] >= 3) {
+        $recaptcha_response = $_POST['g-recaptcha-response'];
+        $recaptcha_secret = '6LcqHZ0pAAAAACMSqskkFiTXTXzMfU6kDZvWw5oP'; 
+        $recaptcha = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptcha_secret}&response={$recaptcha_response}");
+        $recaptcha = json_decode($recaptcha);
+        $captcha = false;
+
+        // Si la verificación es exitosa, continuamos con la validación del usuario y la contraseña.
+        if ($recaptcha->success) {
+            $captcha = true;
+        }
+    }
+        //Una vegada es comprova que no està buit i el captcha es busca a la base de dades si existeix o no l'usuari i si la contrasenya és correcte
         $sentencia = $connexio->prepare("SELECT usuari FROM usuaris WHERE usuari = ?");
         $sentencia->execute([$usuari]);
         $usuariBD = $sentencia->fetchColumn();
@@ -39,18 +56,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //Es desencripta la contrasenya i es compara amb la introduida, si és correcte l'usuari es loga
         $pwd = password_verify($contrasenya, $contrasenyaBD);
-        if ($usuari == $usuariBD && $pwd) {
-            iniciarSessio($usuari);
-            header("Location:../index.php");
+        if ($usuari == $usuariBD && $pwd && $captcha) {
+                $_SESSION['intents'] = 0;
+                iniciarSessio($usuari);
+                header("Location:../index.php");
         }
-        //Si l'usuari no existeix es mostra per pantalla
-        elseif (!($usuari == $usuariBD)){
+           //Es mostren per pantalla els possibles erros
+           elseif (!($usuari == $usuariBD)){
             echo "L'usuari introduït no existeix";
         }
         elseif (!$pwd) {
             echo "Contrasenya incorrecte";
+            $_SESSION['intents']++;
+        } 
+        elseif (!$captcha) {
+            echo "Si us plau completi el recaptcha";
         }
     }
 }
-
 require '../vista/login.vista.php';
+?>

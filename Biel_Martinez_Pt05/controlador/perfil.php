@@ -5,29 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil</title>
 </head>
-<style>
-
-  .perfil {
-    width: 40%;
-    margin: auto;
-    text-align: center;
-  }
-  .perfil img{
-    width: 200px;
-  }
-  body{
-    background-color:#9b9c9a;
-  }
-  h2,h3{
-    text-align: center;
-    font-family: 'Times New Roman', Times, serif;
-    color: #fff;
-  }
-  
-</style>
 <body>
    <?php
-  require_once ('autentificacion.php');
+  require_once ('autentificacio.php');
 ?>
  
   <div class="perfil">
